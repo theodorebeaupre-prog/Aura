@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import SwiftUI
 
@@ -8,7 +9,7 @@ struct BackupRecord: Identifiable {
     let settingCount: Int
 }
 
-final class MockDefaultsManager: ObservableObject, DefaultsManaging {
+class MockDefaultsManager: ObservableObject, DefaultsManaging {
     @Published private(set) var settings: [SystemSetting] = MockDefaultsManager.defaultSettings
     @Published private(set) var presets: [Preset] = MockDefaultsManager.defaultPresets
     @Published private(set) var backups: [BackupRecord] = []
@@ -25,8 +26,16 @@ final class MockDefaultsManager: ObservableObject, DefaultsManaging {
 
     func write(setting: SystemSetting) async throws {
         store[Self.storeKey(domain: setting.domain, key: setting.key)] = setting.value
-        if let idx = settings.firstIndex(where: { $0.id == setting.id }) {
-            settings[idx] = setting
+        if let idx = settings.firstIndex(where: { $0.key == setting.key && $0.domain == setting.domain }) {
+            settings[idx] = SystemSetting(
+                id: settings[idx].id,
+                key: setting.key,
+                domain: setting.domain,
+                value: setting.value,
+                category: setting.category
+            )
+        } else {
+            settings.append(setting)
         }
     }
 
@@ -59,9 +68,9 @@ final class MockDefaultsManager: ObservableObject, DefaultsManaging {
     func reset(setting: SystemSetting) async throws {
         store.removeValue(forKey: Self.storeKey(domain: setting.domain, key: setting.key))
         if let original = Self.defaultSettings.first(where: { $0.key == setting.key && $0.domain == setting.domain }),
-           let idx = settings.firstIndex(where: { $0.id == setting.id }) {
+           let idx = settings.firstIndex(where: { $0.key == setting.key && $0.domain == setting.domain }) {
             settings[idx] = SystemSetting(
-                id: setting.id,
+                id: settings[idx].id,
                 key: original.key,
                 domain: original.domain,
                 value: original.value,
@@ -84,40 +93,40 @@ final class MockDefaultsManager: ObservableObject, DefaultsManaging {
 
     static let defaultSettings: [SystemSetting] = [
         // Animations
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000001")!, key: "NSAutomaticWindowAnimationsEnabled", domain: "NSGlobalDomain", value: .bool(true), category: .animations),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000002")!, key: "NSWindowResizeTime", domain: "NSGlobalDomain", value: .double(0.2), category: .animations),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000003")!, key: "NSScrollAnimationEnabled", domain: "NSGlobalDomain", value: .bool(true), category: .animations),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000001")!, key: "NSAutomaticWindowAnimationsEnabled", domain: "NSGlobalDomain", value: .bool(true), category: .animations),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000002")!, key: "NSWindowResizeTime", domain: "NSGlobalDomain", value: .double(0.2), category: .animations),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000003")!, key: "NSScrollAnimationEnabled", domain: "NSGlobalDomain", value: .bool(true), category: .animations),
         // Dock
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000010")!, key: "autohide", domain: "com.apple.dock", value: .bool(false), category: .dock),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000011")!, key: "tilesize", domain: "com.apple.dock", value: .double(48), category: .dock),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000012")!, key: "autohide-delay", domain: "com.apple.dock", value: .double(0.5), category: .dock),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000013")!, key: "magnification", domain: "com.apple.dock", value: .bool(true), category: .dock),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000014")!, key: "largesize", domain: "com.apple.dock", value: .double(72), category: .dock),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000010")!, key: "autohide", domain: "com.apple.dock", value: .bool(false), category: .dock),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000011")!, key: "tilesize", domain: "com.apple.dock", value: .double(48), category: .dock),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000012")!, key: "autohide-delay", domain: "com.apple.dock", value: .double(0.5), category: .dock),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000013")!, key: "magnification", domain: "com.apple.dock", value: .bool(true), category: .dock),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000014")!, key: "largesize", domain: "com.apple.dock", value: .double(72), category: .dock),
         // Menu Bar
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000020")!, key: "AppleMenuBarVisibleInFullscreen", domain: "NSGlobalDomain", value: .bool(true), category: .menuBar),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000021")!, key: "ShowSeconds", domain: "com.apple.menuextra.clock", value: .bool(false), category: .menuBar),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000022")!, key: "_HIHideMenuBar", domain: "NSGlobalDomain", value: .bool(false), category: .menuBar),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000020")!, key: "AppleMenuBarVisibleInFullscreen", domain: "NSGlobalDomain", value: .bool(true), category: .menuBar),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000021")!, key: "ShowSeconds", domain: "com.apple.menuextra.clock", value: .bool(false), category: .menuBar),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000022")!, key: "_HIHideMenuBar", domain: "NSGlobalDomain", value: .bool(false), category: .menuBar),
         // Transparency
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000030")!, key: "AppleEnableMenuBarTransparency", domain: "NSGlobalDomain", value: .bool(true), category: .transparency),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000031")!, key: "reduceTransparency", domain: "com.apple.universalaccess", value: .bool(false), category: .transparency),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000030")!, key: "AppleEnableMenuBarTransparency", domain: "NSGlobalDomain", value: .bool(true), category: .transparency),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000031")!, key: "reduceTransparency", domain: "com.apple.universalaccess", value: .bool(false), category: .transparency),
         // Accessibility
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000040")!, key: "increaseContrast", domain: "com.apple.universalaccess", value: .bool(false), category: .accessibility),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000041")!, key: "reduceMotion", domain: "com.apple.universalaccess", value: .bool(false), category: .accessibility),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000042")!, key: "grayscale", domain: "com.apple.universalaccess", value: .bool(false), category: .accessibility),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000040")!, key: "increaseContrast", domain: "com.apple.universalaccess", value: .bool(false), category: .accessibility),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000041")!, key: "reduceMotion", domain: "com.apple.universalaccess", value: .bool(false), category: .accessibility),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000042")!, key: "grayscale", domain: "com.apple.universalaccess", value: .bool(false), category: .accessibility),
         // Finder
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000050")!, key: "ShowPathbar", domain: "com.apple.finder", value: .bool(false), category: .finder),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000051")!, key: "ShowStatusBar", domain: "com.apple.finder", value: .bool(false), category: .finder),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000052")!, key: "FXPreferredViewStyle", domain: "com.apple.finder", value: .string("icnv"), category: .finder),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000053")!, key: "AppleShowAllFiles", domain: "com.apple.finder", value: .bool(false), category: .finder),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000050")!, key: "ShowPathbar", domain: "com.apple.finder", value: .bool(false), category: .finder),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000051")!, key: "ShowStatusBar", domain: "com.apple.finder", value: .bool(false), category: .finder),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000052")!, key: "FXPreferredViewStyle", domain: "com.apple.finder", value: .string("icnv"), category: .finder),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000053")!, key: "AppleShowAllFiles", domain: "com.apple.finder", value: .bool(false), category: .finder),
         // Other
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000060")!, key: "ApplePressAndHoldEnabled", domain: "NSGlobalDomain", value: .bool(true), category: .other),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000061")!, key: "KeyRepeat", domain: "NSGlobalDomain", value: .int(6), category: .other),
-        SystemSetting(id: UUID(uuidString: "A001-0000-0000-0000-000000000062")!, key: "InitialKeyRepeat", domain: "NSGlobalDomain", value: .int(25), category: .other),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000060")!, key: "ApplePressAndHoldEnabled", domain: "NSGlobalDomain", value: .bool(true), category: .other),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000061")!, key: "KeyRepeat", domain: "NSGlobalDomain", value: .int(6), category: .other),
+        SystemSetting(id: UUID(uuidString: "A0010000-0000-0000-0000-000000000062")!, key: "InitialKeyRepeat", domain: "NSGlobalDomain", value: .int(25), category: .other),
     ]
 
     static let defaultPresets: [Preset] = [
         Preset(
-            id: UUID(uuidString: "B001-0000-0000-0000-000000000001")!,
+            id: UUID(uuidString: "B0010000-0000-0000-0000-000000000001")!,
             name: "Speed Boost",
             description: "Disables animations and reduces transparency for maximum performance",
             settings: [
@@ -128,7 +137,7 @@ final class MockDefaultsManager: ObservableObject, DefaultsManaging {
             createdAt: Date(timeIntervalSinceNow: -86400 * 7)
         ),
         Preset(
-            id: UUID(uuidString: "B001-0000-0000-0000-000000000002")!,
+            id: UUID(uuidString: "B0010000-0000-0000-0000-000000000002")!,
             name: "Minimal Dock",
             description: "Compact auto-hiding dock without magnification",
             settings: [
@@ -139,7 +148,7 @@ final class MockDefaultsManager: ObservableObject, DefaultsManaging {
             createdAt: Date(timeIntervalSinceNow: -86400 * 3)
         ),
         Preset(
-            id: UUID(uuidString: "B001-0000-0000-0000-000000000003")!,
+            id: UUID(uuidString: "B0010000-0000-0000-0000-000000000003")!,
             name: "Accessibility First",
             description: "High contrast with reduced motion for better accessibility",
             settings: [
@@ -150,7 +159,7 @@ final class MockDefaultsManager: ObservableObject, DefaultsManaging {
             createdAt: Date(timeIntervalSinceNow: -86400 * 1)
         ),
         Preset(
-            id: UUID(uuidString: "B001-0000-0000-0000-000000000004")!,
+            id: UUID(uuidString: "B0010000-0000-0000-0000-000000000004")!,
             name: "Power User Finder",
             description: "Shows path bar, status bar, and hidden files in list view",
             settings: [

@@ -28,7 +28,7 @@ struct BackupView: View {
                                     .font(.callout)
                                     .fontWeight(.medium)
                                 HStack(spacing: 6) {
-                                    Text(backup.date, style: .relative) + Text(" ago")
+                                    Text("\(backup.date, style: .relative) ago")
                                     Text("·")
                                         .foregroundStyle(.tertiary)
                                     Text("\(backup.settingCount) setting\(backup.settingCount == 1 ? "" : "s")")

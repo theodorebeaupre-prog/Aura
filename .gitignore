@@ -38,3 +38,6 @@ xcuserdata/
 
 ## Root
 .DS_Store
+*.gitkeep
+Aura/Core/README.md
+Aura/UI/README.md
