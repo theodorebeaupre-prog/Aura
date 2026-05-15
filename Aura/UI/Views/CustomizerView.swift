@@ -166,7 +166,7 @@ struct CustomizerView: View {
 
     @ViewBuilder
     private var statusBar: some View {
-        if !statusMessage.isEmpty || !pendingValues.isEmpty {
+        if !statusMessage.isEmpty || !pendingValues.isEmpty || !themeManager.systemAccentStatusMessage.isEmpty {
             HStack(spacing: 10) {
                 if !pendingValues.isEmpty {
                     HStack(spacing: 4) {
@@ -180,6 +180,11 @@ struct CustomizerView: View {
                 }
                 if !statusMessage.isEmpty {
                     Text(statusMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                if !themeManager.systemAccentStatusMessage.isEmpty {
+                    Text(themeManager.systemAccentStatusMessage)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -220,6 +225,15 @@ struct CustomizerView: View {
             Text("Tune Tahoe with a theme-aware workspace and calmer visual presets.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+
+            HStack(spacing: 8) {
+                Circle()
+                    .fill(themeManager.osxColorsStatus.isInstalled ? .green : .orange)
+                    .frame(width: 8, height: 8)
+                Text(themeManager.osxColorsStatus.isInstalled ? "macOS accent integration ready" : "`osx-colors` not installed yet")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
 
             ThemePickerView()
                 .environmentObject(themeManager)

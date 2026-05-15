@@ -37,3 +37,8 @@
 [2026-05-15T07:50:02-04:00] CLAUDE_CODE: Completed Aura/UI/Extensions/View+AuraTheme.swift — Added reusable themed card surface styling for panels and hero sections.
 [2026-05-15T07:50:02-04:00] CLAUDE_CODE: Completed Aura/AuraApp.swift — Injected ThemeManager at the app root and applied theme-driven tinting across windows and onboarding.
 [2026-05-15T07:50:02-04:00] CLAUDE_CODE: Completed themed UI pass — Updated CustomizerView, PresetGalleryView, LivePreviewView, BackupView, OnboardingView, and SettingsRowView to use the shared theme system with Sakura-first styling and matching variants.
+[2026-05-15T08:03:20-04:00] CLAUDE_CODE: Completed Aura/UI/Theme/OSXColorsService.swift — Added optional `osx-colors` integration for detecting, installing, and applying macOS accent/highlight colors from Aura.
+[2026-05-15T08:03:20-04:00] CLAUDE_CODE: Completed Aura/UI/Theme/ThemeManager.swift — Added `osx-colors` availability state, install/apply actions, and macOS accent status messaging.
+[2026-05-15T08:03:20-04:00] CLAUDE_CODE: Completed Aura/UI/Theme/AuraTheme.swift — Added per-theme system accent mapping input for `osx-colors`.
+[2026-05-15T08:03:20-04:00] CLAUDE_CODE: Completed Aura/UI/Views/ThemePickerView.swift — Added install/apply macOS accent actions directly inside the theme picker menu.
+[2026-05-15T08:03:20-04:00] CLAUDE_CODE: Completed Aura/UI/Views/CustomizerView.swift — Added `osx-colors` readiness indicator and surfaced macOS accent integration feedback in the status area.

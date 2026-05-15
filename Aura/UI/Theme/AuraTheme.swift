@@ -21,6 +21,7 @@ struct AuraTheme: Identifiable, Equatable {
     let dockTint: Color
     let statusDot: Color
     let material: Material
+    let systemAccentInput: String
 
     var canvasGradient: LinearGradient {
         LinearGradient(
@@ -66,7 +67,8 @@ struct AuraTheme: Identifiable, Equatable {
         previewBottom: Color(hex: 0xFCEBEE),
         dockTint: Color(hex: 0xF4B4CB, opacity: 0.4),
         statusDot: Color(hex: 0xFF8FB6),
-        material: .thinMaterial
+        material: .thinMaterial,
+        systemAccentInput: "ff69b4"
     )
 
     static let tidal = AuraTheme(
@@ -89,7 +91,8 @@ struct AuraTheme: Identifiable, Equatable {
         previewBottom: Color(hex: 0xD9F6FF),
         dockTint: Color(hex: 0x86D0F5, opacity: 0.34),
         statusDot: Color(hex: 0x1CB1E8),
-        material: .regularMaterial
+        material: .regularMaterial,
+        systemAccentInput: "2797d8"
     )
 
     static let ember = AuraTheme(
@@ -112,7 +115,8 @@ struct AuraTheme: Identifiable, Equatable {
         previewBottom: Color(hex: 0xF9E7C8),
         dockTint: Color(hex: 0xF1A56C, opacity: 0.34),
         statusDot: Color(hex: 0xF2843C),
-        material: .thinMaterial
+        material: .thinMaterial,
+        systemAccentInput: "e66732"
     )
 
     static let nocturne = AuraTheme(
@@ -135,7 +139,8 @@ struct AuraTheme: Identifiable, Equatable {
         previewBottom: Color(hex: 0x121823),
         dockTint: Color(hex: 0x415280, opacity: 0.38),
         statusDot: Color(hex: 0x9BA8FF),
-        material: .ultraThinMaterial
+        material: .ultraThinMaterial,
+        systemAccentInput: "8c9eff"
     )
 
     static let all: [AuraTheme] = [.sakura, .tidal, .ember, .nocturne]
