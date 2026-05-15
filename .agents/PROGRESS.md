@@ -7,3 +7,4 @@
 [2026-05-14T20:33:57-04:00] CODEX: Completed Aura/Shared/Models/SettingDiff.swift — Added SettingDiff contract model.
 [2026-05-14T20:37:10-04:00] CODEX: Completed Aura/Core/DefaultsManaging.swift — Added DefaultsManaging protocol contract for backend services.
 [2026-05-14T20:37:10-04:00] CODEX: Completed Aura/Core/DefaultsManager.swift — Added async Process-based defaults CLI wrapper with read/write/apply/preview/reset support for scalar setting values.
+[2026-05-14T20:37:58-04:00] CODEX: Completed Aura/Core/BackupManager.swift — Added JSON-based backup/restore manager with Application Support storage, ISO 8601 dates, and injectable paths for tests.
