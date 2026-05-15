@@ -1,0 +1,40 @@
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User settings
+xcuserdata/
+
+## Scripts
+*.swp
+*.lock
+DS_Store
+
+## Build results
+build/
+DerivedData/
+
+## Tests
+*.xccheckout
+*.xcresult
+
+## External dependencies
+# Swift Package Manager
+.build/
+# Package.resolved should be committed for apps, but since this is scaffolding and I'm told to be minimal:
+# Package.resolved
+
+## Miscellaneous
+*.xcuserstate
+project.xcworkspace/contents.xcworkspacedata
+project.xcworkspace/xcshareddata/SwiftPM/Package.resolved
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+!default.mode1v3
+!default.mode2v3
+!default.perspectivev3
+xcuserdata/
+
+## Root
+.DS_Store

@@ -1,32 +1,13 @@
-//
-//  AuraApp.swift
-//  Aura
-//
-//  Created by Theodore Beaupre on 2026-05-14.
-//
-
 import SwiftUI
-import SwiftData
 
 @main
 struct AuraApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            // TODO (Claude Code): Replace with CustomizerView()
+            Text("Aura — work in progress")
+                .frame(minWidth: 600, minHeight: 400)
         }
-        .modelContainer(sharedModelContainer)
+        // TODO (Claude Code): .windowStyle, .windowResizability
     }
 }
