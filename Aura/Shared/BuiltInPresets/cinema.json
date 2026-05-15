@@ -1,0 +1,48 @@
+{
+  "createdAt" : "2026-05-15T00:40:00Z",
+  "description" : "Accessibility-forward preset for a calmer, darker presentation with fewer moving effects.",
+  "id" : "022558FB-79EC-4990-B909-65CF61077224",
+  "name" : "Cinema",
+  "settings" : [
+    {
+      "category" : "accessibility",
+      "domain" : "com.apple.universalaccess",
+      "id" : "2DEFF165-6D64-4B61-B861-3FB5CB18A6B9",
+      "key" : "reduceMotion",
+      "value" : {
+        "type" : "bool",
+        "value" : true
+      }
+    },
+    {
+      "category" : "transparency",
+      "domain" : "com.apple.universalaccess",
+      "id" : "42E0F9C7-2654-4DC1-A0C1-D09409489CA2",
+      "key" : "reduceTransparency",
+      "value" : {
+        "type" : "bool",
+        "value" : true
+      }
+    },
+    {
+      "category" : "dock",
+      "domain" : "com.apple.dock",
+      "id" : "18430A26-2014-4AF4-8026-7A2B7095EFC9",
+      "key" : "autohide",
+      "value" : {
+        "type" : "bool",
+        "value" : true
+      }
+    },
+    {
+      "category" : "other",
+      "domain" : "NSGlobalDomain",
+      "id" : "9E48F1EF-53ED-4F87-8034-EFD3DF0B78EA",
+      "key" : "AppleInterfaceStyle",
+      "value" : {
+        "type" : "string",
+        "value" : "Dark"
+      }
+    }
+  ]
+}

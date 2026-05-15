@@ -1,0 +1,48 @@
+{
+  "createdAt" : "2026-05-15T00:40:00Z",
+  "description" : "Preset that prioritizes snappier windowing and Dock behavior with reduced visual overhead.",
+  "id" : "14766E2B-6121-4FC4-BDE0-848500F9D572",
+  "name" : "Performance",
+  "settings" : [
+    {
+      "category" : "animations",
+      "domain" : "NSGlobalDomain",
+      "id" : "FEF29F6F-2D96-42BA-82E9-B86D5A5869E1",
+      "key" : "NSWindowResizeTime",
+      "value" : {
+        "type" : "double",
+        "value" : 0.001
+      }
+    },
+    {
+      "category" : "dock",
+      "domain" : "com.apple.dock",
+      "id" : "29387E56-94DB-46E4-9484-A74E1946FDDD",
+      "key" : "autohide-time-modifier",
+      "value" : {
+        "type" : "double",
+        "value" : 0
+      }
+    },
+    {
+      "category" : "dock",
+      "domain" : "com.apple.dock",
+      "id" : "A1DD1DE0-D921-4A9E-A417-2893A6D1BDEB",
+      "key" : "autohide-delay",
+      "value" : {
+        "type" : "double",
+        "value" : 0
+      }
+    },
+    {
+      "category" : "transparency",
+      "domain" : "com.apple.universalaccess",
+      "id" : "E19C449B-50C4-419F-ABA1-AA3B47CFC7A2",
+      "key" : "reduceTransparency",
+      "value" : {
+        "type" : "bool",
+        "value" : true
+      }
+    }
+  ]
+}

@@ -9,3 +9,6 @@
 [2026-05-14T20:37:10-04:00] CODEX: Completed Aura/Core/DefaultsManager.swift — Added async Process-based defaults CLI wrapper with read/write/apply/preview/reset support for scalar setting values.
 [2026-05-14T20:37:58-04:00] CODEX: Completed Aura/Core/BackupManager.swift — Added JSON-based backup/restore manager with Application Support storage, ISO 8601 dates, and injectable paths for tests.
 [2026-05-14T20:38:55-04:00] CODEX: Completed Aura/Core/PresetEngine.swift — Added preset persistence, import/export, validation, built-in preset loading, and apply-with-backup flow.
+[2026-05-14T20:41:27-04:00] CODEX: Completed Aura/Shared/BuiltInPresets/cinema.json — Added built-in Cinema preset JSON using the shared preset contract.
+[2026-05-14T20:41:27-04:00] CODEX: Completed Aura/Shared/BuiltInPresets/focus.json — Added built-in Focus Mode preset JSON using the shared preset contract.
+[2026-05-14T20:41:27-04:00] CODEX: Completed Aura/Shared/BuiltInPresets/performance.json — Added built-in Performance preset JSON using the shared preset contract.

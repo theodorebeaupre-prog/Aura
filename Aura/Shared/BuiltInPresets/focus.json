@@ -1,0 +1,38 @@
+{
+  "createdAt" : "2026-05-15T00:40:00Z",
+  "description" : "Preset focused on trimming interface motion for quicker, less distracting interactions.",
+  "id" : "F6594FDF-E479-42E3-8AF9-38D620A9536F",
+  "name" : "Focus Mode",
+  "settings" : [
+    {
+      "category" : "animations",
+      "domain" : "NSGlobalDomain",
+      "id" : "D6927C5A-F3A1-4EC5-BC41-EB7273C18851",
+      "key" : "NSAutomaticWindowAnimationsEnabled",
+      "value" : {
+        "type" : "bool",
+        "value" : false
+      }
+    },
+    {
+      "category" : "dock",
+      "domain" : "com.apple.dock",
+      "id" : "3E868CF2-6ECE-4848-8351-E6A287992835",
+      "key" : "launchanim",
+      "value" : {
+        "type" : "bool",
+        "value" : false
+      }
+    },
+    {
+      "category" : "animations",
+      "domain" : "com.apple.dock",
+      "id" : "5C99BEA4-8245-4715-9821-213E6603A1BE",
+      "key" : "expose-animation-duration",
+      "value" : {
+        "type" : "double",
+        "value" : 0.1
+      }
+    }
+  ]
+}
