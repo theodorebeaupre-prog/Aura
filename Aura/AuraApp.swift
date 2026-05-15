@@ -2,12 +2,20 @@ import SwiftUI
 
 @main
 struct AuraApp: App {
+    @StateObject private var manager = MockDefaultsManager()
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+
     var body: some Scene {
         WindowGroup {
-            // TODO (Claude Code): Replace with CustomizerView()
-            Text("Aura — work in progress")
-                .frame(minWidth: 600, minHeight: 400)
+            CustomizerView()
+                .environmentObject(manager)
+                .sheet(isPresented: Binding(get: { !hasCompletedOnboarding }, set: { _ in })) {
+                    OnboardingView(onComplete: { hasCompletedOnboarding = true })
+                        .interactiveDismissDisabled()
+                }
         }
-        // TODO (Claude Code): .windowStyle, .windowResizability
+        .windowStyle(.titleBar)
+        .windowResizability(.contentMinSize)
+        .defaultSize(width: 940, height: 620)
     }
 }
