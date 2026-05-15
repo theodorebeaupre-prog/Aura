@@ -2,52 +2,66 @@ import SwiftUI
 
 struct BackupView: View {
     @EnvironmentObject var manager: MockDefaultsManager
+    @EnvironmentObject var themeManager: ThemeManager
     @Environment(\.dismiss) private var dismiss
     @State private var restoringID: UUID? = nil
     @State private var statusMessage = ""
     @State private var showingResetConfirm = false
 
+    private var theme: AuraTheme {
+        themeManager.selectedTheme
+    }
+
     var body: some View {
         NavigationStack {
-            Group {
-                if manager.backups.isEmpty {
-                    ContentUnavailableView(
-                        "No Backups Yet",
-                        systemImage: "clock.arrow.circlepath",
-                        description: Text("Backups are created automatically each time you apply a preset or changes.")
-                    )
-                } else {
-                    List(manager.backups) { backup in
-                        HStack(spacing: 12) {
-                            Image(systemName: "clock.fill")
-                                .foregroundStyle(.secondary)
-                                .frame(width: 24)
+            ZStack {
+                theme.canvasGradient
+                    .ignoresSafeArea()
 
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(backup.label)
-                                    .font(.callout)
-                                    .fontWeight(.medium)
-                                HStack(spacing: 6) {
-                                    Text("\(backup.date, style: .relative) ago")
-                                    Text("·")
-                                        .foregroundStyle(.tertiary)
-                                    Text("\(backup.settingCount) setting\(backup.settingCount == 1 ? "" : "s")")
+                Group {
+                    if manager.backups.isEmpty {
+                        ContentUnavailableView(
+                            "No Backups Yet",
+                            systemImage: "clock.arrow.circlepath",
+                            description: Text("Backups are created automatically each time you apply a preset or changes.")
+                        )
+                        .auraCardStyle(theme: theme, radius: 22)
+                        .padding(24)
+                    } else {
+                        List(manager.backups) { backup in
+                            HStack(spacing: 12) {
+                                Image(systemName: "clock.fill")
+                                    .foregroundStyle(theme.accentStrong)
+                                    .frame(width: 24)
+
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(backup.label)
+                                        .font(.callout)
+                                        .fontWeight(.medium)
+                                    HStack(spacing: 6) {
+                                        Text("\(backup.date, style: .relative) ago")
+                                        Text("·")
+                                            .foregroundStyle(.tertiary)
+                                        Text("\(backup.settingCount) setting\(backup.settingCount == 1 ? "" : "s")")
+                                    }
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                                 }
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            }
 
-                            Spacer()
+                                Spacer()
 
-                            Button(restoringID == backup.id ? "Restoring…" : "Restore") {
-                                restore(backup)
+                                Button(restoringID == backup.id ? "Restoring…" : "Restore") {
+                                    restore(backup)
+                                }
+                                .disabled(restoringID != nil)
+                                .controlSize(.small)
                             }
-                            .disabled(restoringID != nil)
-                            .controlSize(.small)
+                            .padding(.vertical, 6)
                         }
-                        .padding(.vertical, 2)
+                        .listStyle(.inset)
+                        .scrollContentBackground(.hidden)
+                        .padding(18)
                     }
-                    .listStyle(.inset)
                 }
             }
             .navigationTitle("Backups")
@@ -70,9 +84,9 @@ struct BackupView: View {
                             .foregroundStyle(.secondary)
                         Spacer()
                     }
-                    .padding(.horizontal)
-                    .padding(.vertical, 6)
-                    .background(.bar)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(theme.material)
                 }
             }
             .confirmationDialog(

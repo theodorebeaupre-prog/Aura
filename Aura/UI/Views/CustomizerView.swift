@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CustomizerView: View {
     @EnvironmentObject var manager: MockDefaultsManager
+    @EnvironmentObject var themeManager: ThemeManager
     @State private var selectedCategory: Category? = .dock
     @State private var pendingValues: [UUID: SettingValue] = [:]
     @State private var statusMessage = ""
@@ -23,23 +24,45 @@ struct CustomizerView: View {
         return Preset(id: UUID(), name: "Preview", description: "", settings: modified, createdAt: Date())
     }
 
+    private var theme: AuraTheme {
+        themeManager.selectedTheme
+    }
+
     var body: some View {
-        NavigationSplitView {
-            sidebarContent
-                .navigationSplitViewColumnWidth(min: 165, ideal: 195)
-        } detail: {
-            detailContent
+        ZStack {
+            theme.canvasGradient
+                .ignoresSafeArea()
+
+            glowOrbs
+                .ignoresSafeArea()
+
+            NavigationSplitView {
+                sidebarContent
+                    .navigationSplitViewColumnWidth(min: 180, ideal: 220)
+                    .scrollContentBackground(.hidden)
+                    .background(theme.panelGradient.opacity(0.74))
+            } detail: {
+                detailContent
+                    .scrollContentBackground(.hidden)
+                    .background(theme.panelGradient.opacity(0.38))
+            }
         }
         .toolbar { toolbarContent }
         .safeAreaInset(edge: .bottom) { statusBar }
         .sheet(isPresented: $showingPresetGallery) {
-            PresetGalleryView().environmentObject(manager)
+            PresetGalleryView()
+                .environmentObject(manager)
+                .environmentObject(themeManager)
         }
         .sheet(isPresented: $showingPreview) {
-            LivePreviewView(previewPreset: pendingPreset).environmentObject(manager)
+            LivePreviewView(previewPreset: pendingPreset)
+                .environmentObject(manager)
+                .environmentObject(themeManager)
         }
         .sheet(isPresented: $showingBackups) {
-            BackupView().environmentObject(manager)
+            BackupView()
+                .environmentObject(manager)
+                .environmentObject(themeManager)
         }
     }
 
@@ -58,7 +81,7 @@ struct CustomizerView: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(Color.accentColor)
+                            .background(theme.accent)
                             .clipShape(Capsule())
                     }
                 }
@@ -66,7 +89,13 @@ struct CustomizerView: View {
                 Image(systemName: category.systemImage)
             }
         }
+        .listRowBackground(theme.cardFill.opacity(0.35))
         .navigationTitle("Aura")
+        .safeAreaInset(edge: .top, spacing: 10) {
+            headerHero
+                .padding(.horizontal, 12)
+                .padding(.top, 10)
+        }
     }
 
     // MARK: - Detail
@@ -75,17 +104,21 @@ struct CustomizerView: View {
     private var detailContent: some View {
         if let category = selectedCategory {
             List {
-                Section(category.displayName) {
+                Section {
                     ForEach(filteredSettings) { setting in
                         SettingsRowView(
                             setting: setting,
                             pendingValue: pendingBinding(for: setting)
                         )
+                        .environmentObject(themeManager)
                     }
+                } header: {
+                    detailHeader(category: category)
                 }
             }
             .listStyle(.inset)
             .navigationTitle(category.displayName)
+            .background(Color.clear)
         } else {
             ContentUnavailableView(
                 "No Category Selected",
@@ -106,6 +139,8 @@ struct CustomizerView: View {
             Button("Backups", systemImage: "clock.arrow.circlepath") {
                 showingBackups = true
             }
+            ThemePickerView()
+                .environmentObject(themeManager)
         }
         ToolbarItemGroup(placement: .primaryAction) {
             if !pendingValues.isEmpty {
@@ -136,7 +171,7 @@ struct CustomizerView: View {
                 if !pendingValues.isEmpty {
                     HStack(spacing: 4) {
                         Circle()
-                            .fill(.orange)
+                            .fill(theme.statusDot)
                             .frame(width: 6, height: 6)
                         Text("\(pendingValues.count) unsaved change\(pendingValues.count == 1 ? "" : "s")")
                             .font(.caption)
@@ -152,7 +187,71 @@ struct CustomizerView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 6)
-            .background(.bar)
+            .background(theme.material)
+            .overlay(alignment: .top) {
+                Rectangle()
+                    .fill(theme.stroke.opacity(0.8))
+                    .frame(height: 1)
+            }
+        }
+    }
+
+    private var headerHero: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Aura")
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                    Text(theme.name)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(theme.accentStrong)
+                }
+                Spacer()
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(theme.previewGradient)
+                    .frame(width: 52, height: 52)
+                    .overlay {
+                        Image(systemName: theme.symbol)
+                            .font(.title3)
+                            .foregroundStyle(.white)
+                    }
+            }
+
+            Text("Tune Tahoe with a theme-aware workspace and calmer visual presets.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            ThemePickerView()
+                .environmentObject(themeManager)
+        }
+        .padding(14)
+        .auraCardStyle(theme: theme)
+    }
+
+    private func detailHeader(category: Category) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(category.displayName)
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(.primary)
+            Text("Adjust live values, preview the diff, then apply everything in one clean pass.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.vertical, 8)
+    }
+
+    private var glowOrbs: some View {
+        ZStack {
+            Circle()
+                .fill(theme.heroGlow.opacity(0.35))
+                .frame(width: 280, height: 280)
+                .blur(radius: 40)
+                .offset(x: -280, y: -180)
+            Circle()
+                .fill(theme.accentSoft.opacity(0.22))
+                .frame(width: 320, height: 320)
+                .blur(radius: 60)
+                .offset(x: 300, y: 260)
         }
     }
 

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LivePreviewView: View {
     @EnvironmentObject var manager: MockDefaultsManager
+    @EnvironmentObject var themeManager: ThemeManager
     @Environment(\.dismiss) private var dismiss
     var previewPreset: Preset?
 
@@ -10,15 +11,25 @@ struct LivePreviewView: View {
         return manager.preview(preset)
     }
 
+    private var theme: AuraTheme {
+        themeManager.selectedTheme
+    }
+
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                mockDesktop
-                    .padding()
+            ZStack {
+                theme.canvasGradient
+                    .ignoresSafeArea()
 
-                Divider()
+                VStack(spacing: 18) {
+                    mockDesktop
+                        .padding(.horizontal, 20)
+                        .padding(.top, 20)
 
-                changesSection
+                    changesSection
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 20)
+                }
             }
             .navigationTitle("Preview")
             .toolbar {
@@ -34,16 +45,8 @@ struct LivePreviewView: View {
 
     private var mockDesktop: some View {
         ZStack(alignment: .top) {
-            // Wallpaper gradient
-            LinearGradient(
-                colors: [
-                    Color(NSColor.systemBlue).opacity(0.5),
-                    Color(NSColor.systemPurple).opacity(0.7)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            theme.previewGradient
+                .clipShape(RoundedRectangle(cornerRadius: 18))
 
             VStack(spacing: 0) {
                 fakeMenuBar
@@ -53,10 +56,7 @@ struct LivePreviewView: View {
             }
         }
         .frame(height: 240)
-        .overlay {
-            RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(.separator, lineWidth: 0.5)
-        }
+        .auraCardStyle(theme: theme, radius: 20)
     }
 
     private var fakeMenuBar: some View {
@@ -81,8 +81,7 @@ struct LivePreviewView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 5)
-        .background(.ultraThinMaterial)
-        // TODO: VERIFY macOS 26 Liquid Glass API — replace with .glassEffect() if available
+        .background(theme.material)
     }
 
     private var fakeDock: some View {
@@ -97,7 +96,7 @@ struct LivePreviewView: View {
         return HStack(spacing: 6) {
             ForEach(icons, id: \.0) { icon, label in
                 RoundedRectangle(cornerRadius: 7)
-                    .fill(.ultraThinMaterial)
+                    .fill(theme.dockTint)
                     .frame(width: 30, height: 30)
                     .overlay {
                         Image(systemName: icon)
@@ -109,8 +108,7 @@ struct LivePreviewView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 6)
-        .background(.ultraThinMaterial)
-        // TODO: VERIFY macOS 26 Liquid Glass API — replace with .glassEffect() if available
+        .background(theme.material)
         .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 
@@ -124,6 +122,8 @@ struct LivePreviewView: View {
                 systemImage: "checkmark.circle",
                 description: Text("Modify settings in the main window to preview changes here.")
             )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .auraCardStyle(theme: theme, radius: 20)
         } else {
             List(diffs) { diff in
                 HStack(spacing: 12) {
@@ -147,11 +147,14 @@ struct LivePreviewView: View {
                     Text(diff.newValue.displayString)
                         .font(.caption)
                         .fontWeight(.medium)
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(theme.accentStrong)
                 }
                 .padding(.vertical, 2)
             }
             .listStyle(.inset)
+            .scrollContentBackground(.hidden)
+            .background(Color.clear)
+            .auraCardStyle(theme: theme, radius: 20)
         }
     }
 }

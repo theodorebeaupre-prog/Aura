@@ -30,3 +30,10 @@
 [2026-05-14T21:19:51-04:00] CLAUDE_CODE: Completed .gitignore — Ignored placeholder `.gitkeep` files and internal Core/UI README placeholders after removing them from the app bundle path.
 [2026-05-14T21:19:51-04:00] CLAUDE_CODE: Completed app bundle cleanup — Removed placeholder `.gitkeep` files plus `Aura/Core/README.md` and `Aura/UI/README.md` from the synchronized project tree so Xcode no longer emits duplicate resource outputs.
 [2026-05-14T21:19:51-04:00] CLAUDE_CODE: Fixed all compilation errors. Build status: SUCCESS on `platform=macOS,arch=x86_64` — resolved ObservableObject conformance, DefaultsManaging visibility, Text concatenation deprecation, and duplicate bundle resource outputs. XCTest remains blocked because the scheme has no Test action configured.
+[2026-05-15T07:50:02-04:00] CLAUDE_CODE: Completed Aura/UI/Theme/AuraTheme.swift — Added reusable theme tokens and curated visual presets including Sakura, Tidal, Ember, and Nocturne.
+[2026-05-15T07:50:02-04:00] CLAUDE_CODE: Completed Aura/UI/Theme/ThemeManager.swift — Added persistent theme selection manager backed by UserDefaults.
+[2026-05-15T07:50:02-04:00] CLAUDE_CODE: Completed Aura/UI/Views/ThemePickerView.swift — Added in-app theme picker for switching visual styles.
+[2026-05-15T07:50:02-04:00] CLAUDE_CODE: Completed Aura/UI/Extensions/Color+AuraTheme.swift — Added hex-based color initializer for consistent theme palettes.
+[2026-05-15T07:50:02-04:00] CLAUDE_CODE: Completed Aura/UI/Extensions/View+AuraTheme.swift — Added reusable themed card surface styling for panels and hero sections.
+[2026-05-15T07:50:02-04:00] CLAUDE_CODE: Completed Aura/AuraApp.swift — Injected ThemeManager at the app root and applied theme-driven tinting across windows and onboarding.
+[2026-05-15T07:50:02-04:00] CLAUDE_CODE: Completed themed UI pass — Updated CustomizerView, PresetGalleryView, LivePreviewView, BackupView, OnboardingView, and SettingsRowView to use the shared theme system with Sakura-first styling and matching variants.

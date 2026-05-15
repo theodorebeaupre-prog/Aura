@@ -1,11 +1,13 @@
 import SwiftUI
 
 struct SettingsRowView: View {
+    @EnvironmentObject var themeManager: ThemeManager
     let setting: SystemSetting
     @Binding var pendingValue: SettingValue?
 
     private var effectiveValue: SettingValue { pendingValue ?? setting.value }
     private var isModified: Bool { pendingValue != nil && pendingValue != setting.value }
+    private var theme: AuraTheme { themeManager.selectedTheme }
 
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
@@ -15,7 +17,7 @@ struct SettingsRowView: View {
                         .font(.callout)
                     if isModified {
                         Circle()
-                            .fill(Color.accentColor)
+                            .fill(theme.accentStrong)
                             .frame(width: 6, height: 6)
                     }
                 }
@@ -26,7 +28,14 @@ struct SettingsRowView: View {
             Spacer()
             controlView
         }
-        .padding(.vertical, 2)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .background(theme.cardFill.opacity(isModified ? 0.82 : 0.48))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(isModified ? theme.accentSoft : theme.stroke.opacity(0.7), lineWidth: 1)
+        }
     }
 
     @ViewBuilder

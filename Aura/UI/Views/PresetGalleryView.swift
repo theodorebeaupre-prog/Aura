@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PresetGalleryView: View {
     @EnvironmentObject var manager: MockDefaultsManager
+    @EnvironmentObject var themeManager: ThemeManager
     @Environment(\.dismiss) private var dismiss
     @State private var applyingPresetID: UUID? = nil
     @State private var statusMessage = ""
@@ -9,20 +10,34 @@ struct PresetGalleryView: View {
 
     private let columns = [GridItem(.adaptive(minimum: 220, maximum: 340))]
 
+    private var theme: AuraTheme {
+        themeManager.selectedTheme
+    }
+
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 16) {
-                    ForEach(manager.presets) { preset in
-                        PresetCardView(
-                            preset: preset,
-                            isApplying: applyingPresetID == preset.id,
-                            onApply: { applyPreset(preset) }
-                        )
+            ZStack {
+                theme.canvasGradient
+                    .ignoresSafeArea()
+
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 18) {
+                        galleryHero
+
+                        LazyVGrid(columns: columns, spacing: 16) {
+                            ForEach(manager.presets) { preset in
+                                PresetCardView(
+                                    theme: theme,
+                                    preset: preset,
+                                    isApplying: applyingPresetID == preset.id,
+                                    onApply: { applyPreset(preset) }
+                                )
+                            }
+                            AddPresetCardView(isPresented: $showingCreateSheet, theme: theme)
+                        }
                     }
-                    AddPresetCardView(isPresented: $showingCreateSheet)
+                    .padding(20)
                 }
-                .padding()
             }
             .navigationTitle("Presets")
             .toolbar {
@@ -38,9 +53,9 @@ struct PresetGalleryView: View {
                             .foregroundStyle(.secondary)
                         Spacer()
                     }
-                    .padding(.horizontal)
-                    .padding(.vertical, 6)
-                    .background(.bar)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(theme.material)
                 }
             }
         }
@@ -63,11 +78,37 @@ struct PresetGalleryView: View {
             statusMessage = ""
         }
     }
+
+    private var galleryHero: some View {
+        HStack(spacing: 16) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Theme-ready presets")
+                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                Text("Built for quick switches. Pair system tweaks with the current visual mood so the app feels cohesive end-to-end.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(theme.previewGradient)
+                .frame(width: 120, height: 92)
+                .overlay {
+                    Image(systemName: theme.symbol)
+                        .font(.system(size: 34))
+                        .foregroundStyle(.white.opacity(0.92))
+                }
+        }
+        .padding(20)
+        .auraCardStyle(theme: theme, radius: 24)
+    }
 }
 
 // MARK: - Preset card
 
 private struct PresetCardView: View {
+    let theme: AuraTheme
     let preset: Preset
     let isApplying: Bool
     let onApply: () -> Void
@@ -110,13 +151,8 @@ private struct PresetCardView: View {
             .padding(.vertical, 10)
         }
         .frame(minHeight: 130)
-        .background(.background.secondary)
-        // TODO: VERIFY macOS 26 Liquid Glass API — replace with .glassEffect() if available
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay {
-            RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(.separator, lineWidth: 0.5)
-        }
+        .padding(2)
+        .auraCardStyle(theme: theme, radius: 18)
     }
 }
 
@@ -124,24 +160,27 @@ private struct PresetCardView: View {
 
 private struct AddPresetCardView: View {
     @Binding var isPresented: Bool
+    let theme: AuraTheme
 
     var body: some View {
         Button { isPresented = true } label: {
             VStack(spacing: 10) {
                 Image(systemName: "plus.circle")
                     .font(.title2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(theme.accentStrong)
                 Text("New Preset")
                     .font(.callout)
                     .foregroundStyle(.secondary)
+                Text("Soon")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(theme.accentStrong)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(theme.accentSoft.opacity(0.7))
+                    .clipShape(Capsule())
             }
             .frame(maxWidth: .infinity, minHeight: 130)
-            .background(.background.secondary)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .overlay {
-                RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(.separator.opacity(0.6), lineWidth: 0.5, antialiased: true)
-            }
+            .auraCardStyle(theme: theme, radius: 18)
         }
         .buttonStyle(.plain)
     }
